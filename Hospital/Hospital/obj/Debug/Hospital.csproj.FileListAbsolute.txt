@@ -8,3 +8,7 @@ D:\Facultate\anul_2\sem_2\ISS\Laborator\Hospital\Hospital\obj\Debug\Hospital.csp
 D:\Facultate\anul_2\sem_2\ISS\Laborator\Hospital\Hospital\obj\Debug\Hospital.csproj.CoreCompileInputs.cache
 D:\Facultate\anul_2\sem_2\ISS\Laborator\Hospital\Hospital\obj\Debug\Hospital.exe
 D:\Facultate\anul_2\sem_2\ISS\Laborator\Hospital\Hospital\obj\Debug\Hospital.pdb
+D:\Facultate\anul_2\sem_2\ISS\Laborator\Hospital\Hospital\obj\Debug\Hospital.LoginMedicalStaff.resources
+D:\Facultate\anul_2\sem_2\ISS\Laborator\Hospital\Hospital\obj\Debug\Hospital.LoginPharmacy.resources
+D:\Facultate\anul_2\sem_2\ISS\Laborator\Hospital\Hospital\obj\Debug\Hospital.MedicalStaffForm.resources
+D:\Facultate\anul_2\sem_2\ISS\Laborator\Hospital\Hospital\obj\Debug\Hospital.Form1.resources
