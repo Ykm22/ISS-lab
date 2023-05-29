@@ -61,8 +61,12 @@
     </ItemGroup>
     <ItemGroup>
         <Compile Include="IRepository.cs" />
+        <Compile Include="MedicalStaffRepository\DBMedicalStaffRepository.cs" />
+        <Compile Include="MedicalStaffRepository\IMedicalStaffRepository.cs" />
         <Compile Include="MedicinesRepository\DBMedicinesRepository.cs" />
         <Compile Include="MedicinesRepository\IMedicinesRepository.cs" />
+        <Compile Include="OrdersRepository\DBOrdersRepository.cs" />
+        <Compile Include="OrdersRepository\IOrdersRepository.cs" />
         <Compile Include="PharmacistsRepository\DBPharmacistsRepository.cs" />
         <Compile Include="PharmacistsRepository\IPharmacistsRepository.cs" />
         <Compile Include="Properties\AssemblyInfo.cs" />

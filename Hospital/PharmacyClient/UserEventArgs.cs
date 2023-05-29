@@ -7,7 +7,9 @@ namespace client
     {
         Update_AddedMedicine,
         Update_UpdatedMedicine,
-        Update_DeletedMedicine
+        Update_DeletedMedicine,
+        Update_AddedOrder,
+        Update_UpdatedOrder
     };
     public class UserEventArgs : EventArgs
     {

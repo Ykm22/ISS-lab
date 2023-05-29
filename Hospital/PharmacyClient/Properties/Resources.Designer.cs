@@ -45,7 +45,7 @@ namespace client.Properties
                 if ((resourceMan == null))
                 {
                     global::System.Resources.ResourceManager temp =
-                        new global::System.Resources.ResourceManager("client.Properties.Resources",
+                        new global::System.Resources.ResourceManager("PharmacyClient.Properties.Resources",
                             typeof(Resources).Assembly);
                     resourceMan = temp;
                 }

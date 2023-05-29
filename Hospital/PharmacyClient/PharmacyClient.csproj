@@ -7,7 +7,7 @@
         <ProjectGuid>{E4D2AB10-9507-4F52-90A4-CA3DE7DA30C8}</ProjectGuid>
         <OutputType>WinExe</OutputType>
         <RootNamespace>client</RootNamespace>
-        <AssemblyName>client</AssemblyName>
+        <AssemblyName>PharmacyClient</AssemblyName>
         <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
         <FileAlignment>512</FileAlignment>
         <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
@@ -67,61 +67,52 @@
         <Reference Include="System.Xml" />
     </ItemGroup>
     <ItemGroup>
-        <Compile Include="AddMedicineWindow.cs">
-          <SubType>Form</SubType>
-        </Compile>
-        <Compile Include="AddMedicineWindow.Designer.cs">
-          <DependentUpon>AddMedicineWindow.cs</DependentUpon>
-        </Compile>
-        <Compile Include="DeleteMedicineWindow.cs">
-          <SubType>Form</SubType>
-        </Compile>
-        <Compile Include="DeleteMedicineWindow.Designer.cs">
-          <DependentUpon>DeleteMedicineWindow.cs</DependentUpon>
-        </Compile>
-        <Compile Include="FilterMedicinesWindow.cs">
-          <SubType>Form</SubType>
-        </Compile>
-        <Compile Include="FilterMedicinesWindow.Designer.cs">
-          <DependentUpon>FilterMedicinesWindow.cs</DependentUpon>
-        </Compile>
-        <Compile Include="LoginPharmacyWindow.cs">
-          <SubType>Form</SubType>
-        </Compile>
-        <Compile Include="LoginPharmacyWindow.Designer.cs">
-          <DependentUpon>LoginPharmacyWindow.cs</DependentUpon>
-        </Compile>
         <Compile Include="PharmacyController.cs" />
-        <Compile Include="PharmacyWindow.cs">
-          <SubType>Form</SubType>
-        </Compile>
-        <Compile Include="PharmacyWindow.Designer.cs">
-          <DependentUpon>PharmacyWindow.cs</DependentUpon>
-        </Compile>
         <Compile Include="Properties\AssemblyInfo.cs" />
         <Compile Include="StartClient.cs" />
-        <Compile Include="UpdateMedicineWindow.cs">
+        <Compile Include="UserEventArgs.cs" />
+        <Compile Include="Windows\AddMedicineWindow.cs">
           <SubType>Form</SubType>
         </Compile>
-        <Compile Include="UpdateMedicineWindow.Designer.cs">
+        <Compile Include="Windows\AddMedicineWindow.Designer.cs">
+          <DependentUpon>AddMedicineWindow.cs</DependentUpon>
+        </Compile>
+        <Compile Include="Windows\DeleteMedicineWindow.cs">
+          <SubType>Form</SubType>
+        </Compile>
+        <Compile Include="Windows\DeleteMedicineWindow.Designer.cs">
+          <DependentUpon>DeleteMedicineWindow.cs</DependentUpon>
+        </Compile>
+        <Compile Include="Windows\FilterMedicinesWindow.cs">
+          <SubType>Form</SubType>
+        </Compile>
+        <Compile Include="Windows\FilterMedicinesWindow.Designer.cs">
+          <DependentUpon>FilterMedicinesWindow.cs</DependentUpon>
+        </Compile>
+        <Compile Include="Windows\LoginPharmacyWindow.cs">
+          <SubType>Form</SubType>
+        </Compile>
+        <Compile Include="Windows\LoginPharmacyWindow.Designer.cs">
+          <DependentUpon>LoginPharmacyWindow.cs</DependentUpon>
+        </Compile>
+        <Compile Include="Windows\OrderMedicinesWindow.cs">
+          <SubType>Form</SubType>
+        </Compile>
+        <Compile Include="Windows\OrderMedicinesWindow.Designer.cs">
+          <DependentUpon>OrderMedicinesWindow.cs</DependentUpon>
+        </Compile>
+        <Compile Include="Windows\PharmacyWindow.cs">
+          <SubType>Form</SubType>
+        </Compile>
+        <Compile Include="Windows\PharmacyWindow.Designer.cs">
+          <DependentUpon>PharmacyWindow.cs</DependentUpon>
+        </Compile>
+        <Compile Include="Windows\UpdateMedicineWindow.cs">
+          <SubType>Form</SubType>
+        </Compile>
+        <Compile Include="Windows\UpdateMedicineWindow.Designer.cs">
           <DependentUpon>UpdateMedicineWindow.cs</DependentUpon>
         </Compile>
-        <Compile Include="UserEventArgs.cs" />
-        <EmbeddedResource Include="AddMedicineWindow.resx">
-          <DependentUpon>AddMedicineWindow.cs</DependentUpon>
-        </EmbeddedResource>
-        <EmbeddedResource Include="DeleteMedicineWindow.resx">
-          <DependentUpon>DeleteMedicineWindow.cs</DependentUpon>
-        </EmbeddedResource>
-        <EmbeddedResource Include="FilterMedicinesWindow.resx">
-          <DependentUpon>FilterMedicinesWindow.cs</DependentUpon>
-        </EmbeddedResource>
-        <EmbeddedResource Include="LoginPharmacyWindow.resx">
-          <DependentUpon>LoginPharmacyWindow.cs</DependentUpon>
-        </EmbeddedResource>
-        <EmbeddedResource Include="PharmacyWindow.resx">
-          <DependentUpon>PharmacyWindow.cs</DependentUpon>
-        </EmbeddedResource>
         <EmbeddedResource Include="Properties\Resources.resx">
             <Generator>ResXFileCodeGenerator</Generator>
             <LastGenOutput>Resources.Designer.cs</LastGenOutput>
@@ -131,7 +122,25 @@
             <AutoGen>True</AutoGen>
             <DependentUpon>Resources.resx</DependentUpon>
         </Compile>
-        <EmbeddedResource Include="UpdateMedicineWindow.resx">
+        <EmbeddedResource Include="Windows\AddMedicineWindow.resx">
+          <DependentUpon>AddMedicineWindow.cs</DependentUpon>
+        </EmbeddedResource>
+        <EmbeddedResource Include="Windows\DeleteMedicineWindow.resx">
+          <DependentUpon>DeleteMedicineWindow.cs</DependentUpon>
+        </EmbeddedResource>
+        <EmbeddedResource Include="Windows\FilterMedicinesWindow.resx">
+          <DependentUpon>FilterMedicinesWindow.cs</DependentUpon>
+        </EmbeddedResource>
+        <EmbeddedResource Include="Windows\LoginPharmacyWindow.resx">
+          <DependentUpon>LoginPharmacyWindow.cs</DependentUpon>
+        </EmbeddedResource>
+        <EmbeddedResource Include="Windows\OrderMedicinesWindow.resx">
+          <DependentUpon>OrderMedicinesWindow.cs</DependentUpon>
+        </EmbeddedResource>
+        <EmbeddedResource Include="Windows\PharmacyWindow.resx">
+          <DependentUpon>PharmacyWindow.cs</DependentUpon>
+        </EmbeddedResource>
+        <EmbeddedResource Include="Windows\UpdateMedicineWindow.resx">
           <DependentUpon>UpdateMedicineWindow.cs</DependentUpon>
         </EmbeddedResource>
         <None Include="packages.config" />

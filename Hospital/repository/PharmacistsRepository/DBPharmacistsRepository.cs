@@ -8,6 +8,11 @@ namespace repository.PharmacistsRepository
 {
     public class DBPharmacistsRepository : IPharmacistsRepository<int, Pharmacist>
     {
+        public Pharmacist Update(int id, Pharmacist entity, bool substract)
+        {
+            throw new System.NotImplementedException();
+        }
+
         private ISessionFactory sessionFactory;
         public DBPharmacistsRepository(ISessionFactory sessionFactory)
         {

@@ -11,6 +11,7 @@ namespace client
         {
             InitializeComponent();
             this.ctrl = ctrl;
+            maskedTextBox_Password.UseSystemPasswordChar = true;
         }
 
         private void button_Login_Click(object sender, EventArgs e)

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Net.Sockets;
 using System.Runtime.Serialization;
 using System.Runtime.Serialization.Formatters.Binary;
@@ -35,10 +36,24 @@ namespace networking
             port = Port;
             this.responses = new Queue<Response>();
         }
+
+
+        public void UpdateOrder(int orderId, OrderStatus orderStatus)
+        {
+            sendRequest(new UpdateOrderRequest(orderId, orderStatus));
+            Response response = readResponse();
+            if (response is ErrorResponse)
+            {
+                ErrorResponse err = (ErrorResponse)response;
+                throw new HospitalException(err.Message);
+            }
+        }
+
         private void sendRequest(Request request)
         {
             try
             {
+                // MessageBox.Show(request.ToString());
                 formatter.Serialize(stream, request);
                 stream.Flush();
             }
@@ -56,6 +71,8 @@ namespace networking
                 lock (responses)
                 {
                     response = responses.Dequeue();
+                    // MessageBox.Show("in proxy");
+                    // MessageBox.Show(response.ToString());
                 }
             }
             catch (Exception e)
@@ -134,6 +151,12 @@ namespace networking
         {
             try
             {
+                if (Response is UpdateAddedOrderResponse)
+                {
+                    UpdateAddedOrderResponse resp = (UpdateAddedOrderResponse)Response;
+                    Order addedOrder = DtoUtils.GetFromDto(resp.OrderDto);
+                    client.Update_AddedOrder(addedOrder);
+                }
                 if (Response is UpdateAddedMedicineResponse)
                 {
                     UpdateAddedMedicineResponse resp = (UpdateAddedMedicineResponse)Response;
@@ -152,6 +175,13 @@ namespace networking
                     UpdateDeletedMedicineResponse resp = (UpdateDeletedMedicineResponse)Response;
                     Medicine updatedMedicine = DtoUtils.GetFromDto(resp.MedicineDto);
                     client.Update_DeletedMedicine(updatedMedicine);
+                }
+                if (Response is UpdateUpdatedOrderResponse)
+                {
+                    // MessageBox.Show("ALOOOOOOOOO");
+                    UpdateUpdatedOrderResponse resp = (UpdateUpdatedOrderResponse)Response;
+                    Order updatedOrder = DtoUtils.GetFromDto(resp.OrderDto);
+                    client.Update_UpdatedOrder(updatedOrder);
                 }
             }
             catch (Exception e)
@@ -173,7 +203,7 @@ namespace networking
             GetAllMedicinesResponse resp = (GetAllMedicinesResponse)response;
             return DtoUtils.GetFromDto(resp.MedicinesDto);
         }
-
+        
         public void AddMedicine(Medicine medicine)
         {
             MedicineDto medicineDto = DtoUtils.GetDto(medicine);
@@ -186,16 +216,108 @@ namespace networking
             }
         }
 
-        public void UpdateMedicine(Medicine medicine)
+        public List<Order> GetOrdersByMedicalStaffId(int medicalStaffId)
         {
-            MedicineDto medicineDto = DtoUtils.GetDto(medicine);
-            sendRequest(new UpdateMedicineRequest(medicineDto));
+            sendRequest(new GetOrdersByMedicalStaffIdRequest(medicalStaffId));
             Response response = readResponse();
             if (response is ErrorResponse)
             {
                 ErrorResponse err = (ErrorResponse)response;
                 throw new HospitalException(err.Message);
             }
+            GetOrdersByMedicalStaffIdResponse resp = (GetOrdersByMedicalStaffIdResponse)response;
+            return DtoUtils.GetFromDto(resp.OrdersDto).ToList();
+        }
+
+        public int AddOrder(Order order)
+        {
+            // MessageBox.Show("does it pass");
+            OrderDto orderDto = DtoUtils.GetDto(order);
+            // MessageBox.Show("it passed dto");
+            sendRequest(new AddOrderRequest(orderDto));
+            Response response = readResponse();
+            if (response is ErrorResponse)
+            {
+                ErrorResponse err = (ErrorResponse)response;
+                throw new HospitalException(err.Message);
+            }
+
+            AddOrderResponse resp = (AddOrderResponse)response;
+            return resp.OrderId;
+        }
+
+        public void AddOrderMedicines(IList<OrderMedicine> orderMedicines)
+        {
+            IList<OrderMedicineDto> orderMedicinesDto = DtoUtils.GetDto(orderMedicines);
+            sendRequest(new AddOrderMedicinesRequest(orderMedicinesDto));
+            Response response = readResponse();
+            // MessageBox.Show("Response read");
+            if (response is ErrorResponse)
+            {
+                ErrorResponse err = (ErrorResponse)response;
+                throw new HospitalException(err.Message);
+            }
+        }
+
+        public Medicine FindMedicine(int id)
+        {
+            // MessageBox.Show("Sending find medicine request");
+            sendRequest(new FindMedicineRequest(id));
+            // MessageBox.Show("Request sent");
+            Response response = readResponse();
+            // MessageBox.Show("Response read");
+            if (response is ErrorResponse)
+            {
+                ErrorResponse err = (ErrorResponse)response;
+                throw new HospitalException(err.Message);
+            }
+
+            FindMedicineResponse resp = (FindMedicineResponse)response;
+            MedicineDto medicineDto = resp.MedicineDto;
+            return DtoUtils.GetFromDto(medicineDto);
+        }
+        public void UpdateMedicine(Medicine medicine, bool substract)
+        {
+            MedicineDto medicineDto = DtoUtils.GetDto(medicine);
+            sendRequest(new UpdateMedicineRequest(medicineDto, substract));
+            Response response = readResponse();
+            if (response is ErrorResponse)
+            {
+                ErrorResponse err = (ErrorResponse)response;
+                throw new HospitalException(err.Message);
+            }
+            
+        }
+
+        public List<Order> GetIncompleteOrders()
+        {
+            // MessageBox.Show("sending incomplete orders request");
+            sendRequest(new GetIncompleteOrdersRequest());
+            // MessageBox.Show("sent incomplete orders request");
+            Response response = readResponse();
+            // MessageBox.Show("read incomplete orders response");
+            // MessageBox.Show("got response");
+            if (response is ErrorResponse)
+            {
+                ErrorResponse err = (ErrorResponse)response;
+                throw new HospitalException(err.Message);
+            }
+
+            GetIncompleteOrdersResponse resp = (GetIncompleteOrdersResponse)response;
+            return DtoUtils.GetFromDto(resp.OrdersDto);
+        }
+
+        public List<Medicine> GetOrderMedicines(int orderId)
+        {
+            sendRequest(new GetOrderMedicinesRequest(orderId));
+            Response response = readResponse();
+            if (response is ErrorResponse)
+            {
+                ErrorResponse err = (ErrorResponse)response;
+                throw new HospitalException(err.Message);
+            }
+            GetOrderMedicinesResponse resp = (GetOrderMedicinesResponse)response;
+            return DtoUtils.GetFromDto(resp.MedicinesDto).ToList();
         }
 
         public void DeleteMedicine(int id)
@@ -248,10 +370,37 @@ namespace networking
             return null;
         }
 
+        public MedicalStaff LoginMedicalStaff(MedicalStaff medicalStaff, IObserver client)
+        {
+            initializeConnection();
+            MedicalStaff foundMedicalStaff = FindMedicalStaffByCredentials(medicalStaff.Name, medicalStaff.Password);
+            MedicalStaffDto medicalStaffDto = DtoUtils.GetDto(foundMedicalStaff);
+            sendRequest(new LoginMedicalStaffRequest(medicalStaffDto));
+            
+            Response response = readResponse();
+            
+            if (response is OkResponse)
+            {
+                this.client = client;
+                return foundMedicalStaff;
+            }
+
+            if (response is ErrorResponse)
+            {
+                ErrorResponse err = (ErrorResponse)response;
+                closeConnection();
+                throw new HospitalException(err.Message);
+            }
+
+            return null;
+        }
         public Pharmacist FindPharmacistByCredentials(string pharmacistName, string pharmacistPassword)
         {
+            // MessageBox.Show("Sending request!");
             sendRequest(new FindPharmacistByCredentialsRequest(pharmacistName, pharmacistPassword));
+            // MessageBox.Show("Sending request!");
             Response response = readResponse();
+            // MessageBox.Show("Sending request!");
             if (response is ErrorResponse)
             {
                 ErrorResponse err = (ErrorResponse)response;
@@ -265,10 +414,44 @@ namespace networking
             return pharmacist;
         }
 
+        public MedicalStaff FindMedicalStaffByCredentials(string medicalStaffName, string medicalStaffPassword)
+        {
+            // MessageBox.Show("sending request NOW!");
+            sendRequest(new FindMedicalStaffByCredentialsRequest(medicalStaffName, medicalStaffPassword));
+            Response response = readResponse();
+            if (response is ErrorResponse)
+            {
+                ErrorResponse err = (ErrorResponse)response;
+                closeConnection();
+                throw new HospitalException(err.Message);
+            }
+            
+
+            FindMedicalStaffByCredentialsResponse resp = (FindMedicalStaffByCredentialsResponse)response;
+            // MessageBox.Show(resp.ToString());
+            MedicalStaffDto medicalStaffDto = resp.MedicalStaffDto;
+            MedicalStaff medicalStaff = DtoUtils.GetFromDto(medicalStaffDto);
+            // MessageBox.Show(medicalStaff.ToString());
+            return medicalStaff;
+        }
+
         public void Logout(Pharmacist pharmacist, IObserver client)
         {
             PharmacistDto pharmacistDto = DtoUtils.GetDto(pharmacist);
             sendRequest(new LogoutRequest(pharmacistDto));
+            Response response = readResponse();
+            closeConnection();
+            if (response is ErrorResponse)
+            {
+                ErrorResponse err = (ErrorResponse)response;
+                throw new HospitalException(err.Message);
+            }
+        }
+
+        public void LogoutMedicalStaff(MedicalStaff medicalStaff, IObserver client)
+        {
+            MedicalStaffDto medicalStaffDto = DtoUtils.GetDto(medicalStaff);
+            sendRequest(new LogoutMedicalStaffRequest(medicalStaffDto));
             Response response = readResponse();
             closeConnection();
             if (response is ErrorResponse)

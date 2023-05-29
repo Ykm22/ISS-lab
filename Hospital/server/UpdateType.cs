@@ -4,6 +4,8 @@
     {
         UpdateMedicine,
         AddMedicine,
-        DeleteMedicine
+        DeleteMedicine,
+        AddOrder,
+        UpdateOrder
     }
 }

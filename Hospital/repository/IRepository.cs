@@ -14,5 +14,6 @@ namespace repository
         IEnumerable<TE> GetAll();
         TE Find(TId id);
         TE Update(TId id, TE entity);
+        TE Update(TId id, TE entity, bool substract);
     }
 }

@@ -29,6 +29,24 @@ namespace networking.ObjectProtocol
         }
     }
     [Serializable]
+    public class UpdateAddedOrderResponse : UpdateResponse
+    {
+        private OrderDto orderDto;
+
+        public UpdateAddedOrderResponse(OrderDto orderDto)
+        {
+            this.orderDto = orderDto;
+        }
+
+        public virtual OrderDto OrderDto
+        {
+            get
+            {
+                return orderDto;
+            }
+        }
+    }
+    [Serializable]
     public class UpdateUpdatedMedicineResponse : UpdateResponse
     {
         private MedicineDto medicineDto;
@@ -43,6 +61,42 @@ namespace networking.ObjectProtocol
             get
             {
                 return medicineDto;
+            }
+        }
+    }
+    [Serializable]
+    public class GetOrdersByMedicalStaffIdResponse : Response
+    {
+        private List<OrderDto> ordersDto;
+
+        public GetOrdersByMedicalStaffIdResponse(List<OrderDto> ordersDto)
+        {
+            this.ordersDto = ordersDto;
+        }
+
+        public virtual List<OrderDto> OrdersDto
+        {
+            get
+            {
+                return ordersDto;
+            }
+        }
+    }
+    [Serializable]
+    public class UpdateUpdatedOrderResponse : UpdateResponse
+    {
+        private OrderDto orderDto;
+
+        public UpdateUpdatedOrderResponse( OrderDto orderDto)
+        {
+            this.orderDto = orderDto;
+        }
+
+        public virtual OrderDto OrderDto
+        {
+            get
+            {
+                return orderDto;
             }
         }
     }
@@ -79,6 +133,78 @@ namespace networking.ObjectProtocol
             get
             {
                 return medicinesDto;
+            }
+        }
+    }
+    [Serializable]
+    public class GetOrderMedicinesResponse : Response
+    {
+        private IList<MedicineDto> medicinesDto;
+
+        public GetOrderMedicinesResponse(IList<MedicineDto> medicinesDto)
+        {
+            this.medicinesDto = medicinesDto;
+        }
+
+        public virtual IList<MedicineDto> MedicinesDto
+        {
+            get
+            {
+                return medicinesDto;
+            }
+        }
+    }
+    [Serializable]
+    public class AddOrderResponse : Response
+    {
+        private int orderId;
+
+        public AddOrderResponse(int orderId)
+        {
+            this.orderId = orderId;
+        }
+
+        public virtual int OrderId
+        {
+            get
+            {
+                return orderId;
+            }
+        }
+    }
+    [Serializable]
+    public class GetIncompleteOrdersResponse : Response
+    {
+        private IList<OrderDto> ordersDto;
+
+        public GetIncompleteOrdersResponse(IList<OrderDto> ordersDto)
+        {
+            this.ordersDto = ordersDto;
+        }
+
+        public virtual  IList<OrderDto> OrdersDto
+        {
+            get
+            {
+                return ordersDto;
+            }
+        }
+    }
+    [Serializable]
+    public class FindMedicineResponse : Response
+    {
+        private MedicineDto medicineDto;
+
+        public FindMedicineResponse(MedicineDto medicineDto)
+        {
+            this.medicineDto = medicineDto;
+        }
+
+        public virtual MedicineDto MedicineDto
+        {
+            get
+            {
+                return medicineDto;
             }
         }
     }
@@ -136,6 +262,25 @@ namespace networking.ObjectProtocol
             get
             {
                 return pharmacistDto;
+            }
+        } 
+
+    }
+    [Serializable]
+    public class FindMedicalStaffByCredentialsResponse : Response
+    {
+        private MedicalStaffDto medicalStaffDto;
+
+        public FindMedicalStaffByCredentialsResponse(MedicalStaffDto medicalStaffDto)
+        {
+            this.medicalStaffDto = medicalStaffDto;
+        }
+
+        public virtual MedicalStaffDto MedicalStaffDto
+        {
+            get
+            {
+                return medicalStaffDto;
             }
         } 
 

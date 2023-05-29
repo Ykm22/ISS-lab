@@ -8,8 +8,9 @@ namespace services
     {
         IEnumerable<Medicine> GetAllMedicines();
         void AddMedicine(Medicine medicine);
-        void UpdateMedicine(Medicine medicine);
+        void UpdateMedicine(Medicine medicine, bool substract);
         void DeleteMedicine(int id);
         IEnumerable<Medicine> FilterMedicines(Purpose purpose);
+        Medicine FindMedicine(int id);
     }
 }

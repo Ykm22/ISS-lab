@@ -61,8 +61,14 @@
     </ItemGroup>
     <ItemGroup>
         <Compile Include="Identifiable.cs" />
+        <Compile Include="MedicalStaff.cs" />
+        <Compile Include="MedicalStaffMap.cs" />
         <Compile Include="Medicine.cs" />
         <Compile Include="MedicineMap.cs" />
+        <Compile Include="Order.cs" />
+        <Compile Include="OrderMap.cs" />
+        <Compile Include="OrderMedicine.cs" />
+        <Compile Include="OrderMedicineMap.cs" />
         <Compile Include="Pharmacist.cs" />
         <Compile Include="PharmacistMap.cs" />
         <Compile Include="Properties\AssemblyInfo.cs" />

@@ -38,7 +38,10 @@ namespace client
             this.button_UpdateMedicine = new System.Windows.Forms.Button();
             this.button_FilterMedicines = new System.Windows.Forms.Button();
             this.button_Refresh = new System.Windows.Forms.Button();
+            this.label2 = new System.Windows.Forms.Label();
+            this.dataGridView_Orders = new System.Windows.Forms.DataGridView();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView_Medicines)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.dataGridView_Orders)).BeginInit();
             this.SuspendLayout();
             // 
             // dataGridView_Medicines
@@ -52,7 +55,7 @@ namespace client
             // 
             // label1
             // 
-            this.label1.Location = new System.Drawing.Point(328, 18);
+            this.label1.Location = new System.Drawing.Point(297, 9);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(73, 23);
             this.label1.TabIndex = 1;
@@ -108,11 +111,31 @@ namespace client
             this.button_Refresh.UseVisualStyleBackColor = true;
             this.button_Refresh.Click += new System.EventHandler(this.button_Refresh_Click);
             // 
+            // label2
+            // 
+            this.label2.Location = new System.Drawing.Point(297, 468);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(57, 23);
+            this.label2.TabIndex = 7;
+            this.label2.Text = "Orders";
+            // 
+            // dataGridView_Orders
+            // 
+            this.dataGridView_Orders.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.dataGridView_Orders.Location = new System.Drawing.Point(123, 506);
+            this.dataGridView_Orders.Name = "dataGridView_Orders";
+            this.dataGridView_Orders.RowTemplate.Height = 24;
+            this.dataGridView_Orders.Size = new System.Drawing.Size(416, 226);
+            this.dataGridView_Orders.TabIndex = 8;
+            this.dataGridView_Orders.CellClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridView_Orders_CellClick);
+            // 
             // PharmacyWindow
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(677, 450);
+            this.ClientSize = new System.Drawing.Size(677, 768);
+            this.Controls.Add(this.dataGridView_Orders);
+            this.Controls.Add(this.label2);
             this.Controls.Add(this.button_Refresh);
             this.Controls.Add(this.button_FilterMedicines);
             this.Controls.Add(this.button_UpdateMedicine);
@@ -123,8 +146,12 @@ namespace client
             this.Name = "PharmacyWindow";
             this.Text = "PharmacyWindow";
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView_Medicines)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.dataGridView_Orders)).EndInit();
             this.ResumeLayout(false);
         }
+
+        private System.Windows.Forms.Label label2;
+        private System.Windows.Forms.DataGridView dataGridView_Orders;
 
         private System.Windows.Forms.Button button_Refresh;
 

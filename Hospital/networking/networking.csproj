@@ -63,7 +63,10 @@
     <ItemGroup>
         <Compile Include="ClientWorker.cs" />
         <Compile Include="DTO\DtoUtils.cs" />
+        <Compile Include="DTO\MedicalStaffDto.cs" />
         <Compile Include="DTO\MedicineDto.cs" />
+        <Compile Include="DTO\OrderDto.cs" />
+        <Compile Include="DTO\OrderMedicineDto.cs" />
         <Compile Include="DTO\PharmacistDto.cs" />
         <Compile Include="ObjectProtocol\ObjectRequestProtocol.cs" />
         <Compile Include="ObjectProtocol\ObjectResponseProtocol.cs" />

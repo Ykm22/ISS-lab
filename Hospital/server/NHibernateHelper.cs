@@ -20,6 +20,7 @@ namespace server
                         .Database(SQLiteConfiguration.Standard.ConnectionString(connString))
                         .Mappings(m => m.FluentMappings.AddFromAssemblyOf<Pharmacist>())
                         .Mappings(m => m.FluentMappings.AddFromAssemblyOf<Medicine>())
+                        .Mappings(m => m.FluentMappings.AddFromAssemblyOf<Order>())
                         .BuildSessionFactory();
                 }
 

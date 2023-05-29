@@ -1,16 +1,21 @@
-﻿using FluentNHibernate.Mapping;
+﻿    using FluentNHibernate.Mapping;
 
-namespace model
-{
-    public class MedicineMap : ClassMap<Medicine>
+    namespace model
     {
-        public MedicineMap()
+        public class MedicineMap : ClassMap<Medicine>
         {
-            Table("Medicines");
-            Id(m => m.Id);
-            Map(m => m.Name);
-            Map(m => m.Purpose);
-            Map(m => m.AvailableQuantity);
+            public MedicineMap()
+            {
+                Table("Medicines");
+                Id(m => m.Id).Column("Id");
+                Map(m => m.Name);
+                Map(m => m.Purpose);
+                Map(m => m.AvailableQuantity);
+                HasManyToMany(x => x.Orders)
+                    .Table("Order_Medicine")
+                    .ParentKeyColumn("MedicineId")
+                    .ChildKeyColumn("OrderId")
+                    .Cascade.All();
+            }
         }
     }
-}

@@ -1,4 +1,7 @@
-﻿namespace model
+﻿using System;
+using System.Collections.Generic;
+
+namespace model
 {
     public class Medicine : Identifiable
     {
@@ -6,7 +9,8 @@
         public virtual Purpose Purpose { get; set; }
         public virtual string Name { get; set; }
         public virtual int AvailableQuantity { get; set; }
-
+        
+        public virtual IList<Order> Orders { get; set; } = new List<Order>();
         public Medicine()
         {
         }

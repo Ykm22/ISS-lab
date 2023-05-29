@@ -61,8 +61,10 @@
     </ItemGroup>
     <ItemGroup>
         <Compile Include="HospitalException.cs" />
+        <Compile Include="IMedicalStaffServices.cs" />
         <Compile Include="IMedicineServices.cs" />
         <Compile Include="IObserver.cs" />
+        <Compile Include="IOrderServices.cs" />
         <Compile Include="IPharmacistServices.cs" />
         <Compile Include="IServices.cs" />
         <Compile Include="Properties\AssemblyInfo.cs" />

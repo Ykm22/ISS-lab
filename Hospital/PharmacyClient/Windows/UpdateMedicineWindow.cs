@@ -25,7 +25,7 @@ namespace client
             int NewAvailableQuantity = (int)numericUpDown_NewQuantity.Value;
             Medicine medicine = new Medicine(purpose, NewName, NewAvailableQuantity);
             medicine.SetId(IdToUpdate);
-            ctrl.UpdateMedicine(medicine);
+            ctrl.UpdateMedicine(medicine, false);
             MessageBox.Show("Medicine updated successfully!");
             Hide();
 

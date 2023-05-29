@@ -7,6 +7,7 @@ using System.Windows.Forms;
 using model;
 using networking.DTO;
 using networking.ObjectProtocol;
+using NHibernate;
 using services;
 
 namespace networking
@@ -75,12 +76,15 @@ namespace networking
         }
         private void sendResponse(Response Response)
         {
+            // MessageBox.Show("sending response from worker" + Response);
             Console.WriteLine("sending response " + Response);
             lock (stream)
             {
                 formatter.Serialize(stream, Response);
                 stream.Flush();
             }
+
+            // Console.WriteLine("finished sending response");
         }
         private Response handleRequest(Request request)
         {
@@ -90,10 +94,51 @@ namespace networking
                 FindPharmacistByCredentialsRequest req = (FindPharmacistByCredentialsRequest)request;
                 return handleFIND_PHARMACIST_BY_CREDENTIALS(req);
             }
+            if (request is GetOrdersByMedicalStaffIdRequest)
+            {
+                GetOrdersByMedicalStaffIdRequest req = (GetOrdersByMedicalStaffIdRequest)request;
+                return handleGET_ORDERS_BY_MEDICAL_STAFF_ID(req);
+            }
+            if (request is UpdateOrderRequest)
+            {
+                UpdateOrderRequest req = (UpdateOrderRequest)request;
+                return handleUPDATE_ORDER(req);
+            }
+            if (request is GetOrderMedicinesRequest)
+            {
+                GetOrderMedicinesRequest req = (GetOrderMedicinesRequest)request;
+                return handleGET_ORDER_MEDICINES(req);
+            }
+            if (request is AddOrderMedicinesRequest)
+            {
+                AddOrderMedicinesRequest req = (AddOrderMedicinesRequest)request;
+                return handleADD_ORDER_MEDICINES(req);
+            }
+            if (request is GetIncompleteOrdersRequest)
+            {
+                // MessageBox.Show("in worker");
+                GetIncompleteOrdersRequest req = (GetIncompleteOrdersRequest)request;
+                return handleGET_INCOMPLETE_ORDERS(req);
+            }
+            if (request is FindMedicineRequest)
+            {
+                FindMedicineRequest req = (FindMedicineRequest)request;
+                return handleFIND_MEDICINE(req);
+            }
+            if (request is FindMedicalStaffByCredentialsRequest)
+            {
+                FindMedicalStaffByCredentialsRequest req = (FindMedicalStaffByCredentialsRequest)request;
+                return handleFIND_MEDICAL_STAFF_BY_CREDENTIALS(req);
+            }
             if (request is LoginRequest)
             {
                 LoginRequest req = (LoginRequest)request;
                 return handleLOGIN(req);
+            }
+            if (request is LoginMedicalStaffRequest)
+            {
+                LoginMedicalStaffRequest req = (LoginMedicalStaffRequest)request;
+                return handleLOGIN_MEDICAL_STAFF(req);
             }
             //
             // if (request is LogoutRequest)
@@ -141,7 +186,11 @@ namespace networking
                 AddMedicineRequest req = (AddMedicineRequest)request;
                 return handleADD_MEDICINE(req);
             }
-            
+            if (request is AddOrderRequest)
+            {
+                AddOrderRequest req = (AddOrderRequest)request;
+                return handleADD_ORDER(req);
+            }
             if (request is UpdateMedicineRequest)
             {
                 UpdateMedicineRequest req = (UpdateMedicineRequest)request;
@@ -149,6 +198,206 @@ namespace networking
             }
 
             return response;
+        }
+
+        private Response handleGET_ORDERS_BY_MEDICAL_STAFF_ID(GetOrdersByMedicalStaffIdRequest req)
+        {
+            int medicalStaffId = req.MedicalStaffId;
+            try
+            {
+                List<Order> orders;
+                lock (server)
+                {
+                    orders = server.GetOrdersByMedicalStaffId(medicalStaffId);
+                }
+
+                return new GetOrdersByMedicalStaffIdResponse(DtoUtils.GetDto(orders));
+            }
+            catch (HospitalException e)
+            {
+                return new ErrorResponse(e.Message);
+            }
+        }
+
+        private Response handleUPDATE_ORDER(UpdateOrderRequest req)
+        {
+            int orderId = req.OrderId;
+            OrderStatus orderStatus = req.OrderStatus;
+            try
+            {
+                lock (server)
+                {
+                    server.UpdateOrder(orderId, orderStatus);
+                }
+
+                return new OkResponse();
+            }
+            catch (HospitalException e)
+            {
+                return new ErrorResponse(e.Message);
+            }
+        }
+
+        public void Update_UpdatedOrder(Order order)
+        {
+            try
+            {
+                OrderDto orderDto = DtoUtils.GetDto(order);
+                sendResponse(new UpdateUpdatedOrderResponse(orderDto));
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.StackTrace);
+            }
+        }
+
+        private Response handleGET_ORDER_MEDICINES(GetOrderMedicinesRequest req)
+        {
+            Console.WriteLine("Get order medicines request...");
+            try
+            {
+                IEnumerable<Medicine> medicines;
+                lock (server)
+                {
+                    medicines = server.GetOrderMedicines(req.OrderId);
+                }
+
+                IList<MedicineDto> medicinesDto = DtoUtils.GetDto(medicines);
+                return new GetOrderMedicinesResponse(medicinesDto);
+            }
+            catch (HospitalException e)
+            {
+                return new ErrorResponse(e.Message);
+            }
+        }
+
+        private Response handleADD_ORDER_MEDICINES(AddOrderMedicinesRequest req)
+        {
+            Console.WriteLine("Add order medicines request...");
+            // MessageBox.Show("does it pass getfromdto");
+            IList<OrderMedicine> orderMedicines = DtoUtils.GetFromDto(req.OrderMedicinesDto);
+            // MessageBox.Show("it passed");
+            try
+            {
+                lock (server)
+                {
+                    server.AddOrderMedicines(orderMedicines);
+                }
+
+                return new OkResponse();
+            }
+            catch (HospitalException e)
+            {
+                return new ErrorResponse(e.Message);
+            }
+        }
+
+        private Response handleADD_ORDER(AddOrderRequest req)
+        {
+            Console.WriteLine("Add order request...");
+            // MessageBox.Show("does it pass getfromdto");
+            Order order = DtoUtils.GetFromDto(req.OrderDto);
+            // MessageBox.Show("it passed");
+            try
+            {
+                lock (server)
+                {
+                    server.AddOrder(order);
+                }
+
+                return new AddOrderResponse(order.Id);
+            }
+            catch (HospitalException e)
+            {
+                return new ErrorResponse(e.Message);
+            }
+        }
+
+        private Response handleGET_INCOMPLETE_ORDERS(GetIncompleteOrdersRequest req)
+        {
+            // MessageBox.Show("in worker = handle_get_incomplete_orders");
+            Console.WriteLine("Get incomplete orders request...");
+            try
+            {
+                IList<Order> orders;
+                lock (server)
+                {
+                    orders = server.GetIncompleteOrders();
+                }
+                // MessageBox.Show("in worker = got orders from server");
+
+                IList<OrderDto> ordersDto = DtoUtils.GetDto(orders);
+                return new GetIncompleteOrdersResponse(ordersDto);
+            }
+            catch (HospitalException e)
+            {
+                return new ErrorResponse(e.Message);
+            }
+        }
+    
+
+        private Response handleFIND_MEDICINE(FindMedicineRequest req)
+        {
+            // MessageBox.Show("in client worker, handling find medicine request");
+            Console.WriteLine("Find medicine request...");
+            int id = req.Id;
+            try
+            {
+                // MessageBox.Show("in client worker, handling find medicine requestv2");
+                Medicine medicine = null;
+                lock (server)
+                {
+                    medicine = server.FindMedicine(id);
+                    // MessageBox.Show("in client worker, handling find medicine requestv3");
+                }
+
+                // MessageBox.Show("in client worker, handling find medicine requestv4");
+                return new FindMedicineResponse(DtoUtils.GetDto(medicine));
+            }
+            catch (HospitalException ex)
+            {
+                return new ErrorResponse(ex.Message);
+            }
+        }
+
+        private Response handleLOGIN_MEDICAL_STAFF(LoginMedicalStaffRequest req)
+        {
+            Console.WriteLine("Login medical staff request...");                          
+            MedicalStaff medicalStaff = DtoUtils.GetFromDto(req.MedicalStaffDto);
+            try                                                             
+            {                                                               
+                lock (server)                                               
+                {                                                           
+                    server.LoginMedicalStaff(medicalStaff, this);                        
+                }                                                           
+                return new OkResponse();                                    
+            }                                                               
+            catch (HospitalException e)                                     
+            {                                                               
+                connected = false;                                          
+                return new ErrorResponse(e.Message);                        
+            }                                                               
+        }
+
+        private Response handleFIND_MEDICAL_STAFF_BY_CREDENTIALS(FindMedicalStaffByCredentialsRequest req)
+        {
+            Console.WriteLine("Find medical staff by credentials request...");
+            string medicalStaffName = req.MedicalStaffName;
+            string medicalStaffPassword = req.MedicalStaffPassword;
+            try
+            {
+                MedicalStaff medicalStaff = null;
+                lock (server)
+                {
+                    medicalStaff = server.FindMedicalStaffByCredentials(medicalStaffName, medicalStaffPassword);
+                }
+
+                return new FindMedicalStaffByCredentialsResponse(DtoUtils.GetDto(medicalStaff));
+            }
+            catch (HospitalException ex)
+            {
+                return new ErrorResponse(ex.Message);
+            }
         }
 
         private Response handleFILTER_MEDICINES(FilterMedicinesRequest req)
@@ -191,11 +440,12 @@ namespace networking
         private Response handleUPDATE_MEDICINE(UpdateMedicineRequest req)
         {
             Medicine medicine = DtoUtils.GetFromDto(req.MedicineDto);
+            bool substract = req.Substract;
             try
             {
                 lock (server)
                 {
-                    server.UpdateMedicine(medicine);
+                    server.UpdateMedicine(medicine, substract);
                 }
 
                 return new OkResponse();
@@ -269,12 +519,12 @@ namespace networking
         private Response handleLOGIN(LoginRequest req)
         {
             Console.WriteLine("Login request...");
-            Pharmacist ticketAgent = DtoUtils.GetFromDto(req.PharmacistDto);
+            Pharmacist pharmacist = DtoUtils.GetFromDto(req.PharmacistDto);
             try
             {
                 lock (server)
                 {
-                    server.Login(ticketAgent, this);
+                    server.Login(pharmacist, this);
                 }
                 return new OkResponse();
             }
@@ -291,6 +541,18 @@ namespace networking
             {
                 MedicineDto medicineDto = DtoUtils.GetDto(medicine);
                 sendResponse(new UpdateAddedMedicineResponse(medicineDto));
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.StackTrace);
+            }
+        }
+        public void Update_AddedOrder(Order order)
+        {
+            try
+            {
+                OrderDto orderDto = DtoUtils.GetDto(order);
+                sendResponse(new UpdateAddedOrderResponse(orderDto));
             }
             catch (Exception e)
             {

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using model;
 using networking.DTO;
 
@@ -24,6 +25,24 @@ namespace networking.ObjectProtocol
         }
     }
     [Serializable]
+    public class LoginMedicalStaffRequest : Request
+    {
+        private MedicalStaffDto medicalStaffDto;
+
+        public LoginMedicalStaffRequest(MedicalStaffDto medicalStaffDto)
+        {
+            this.medicalStaffDto = medicalStaffDto;
+        }
+
+        public virtual MedicalStaffDto MedicalStaffDto
+        {
+            get
+            {
+                return medicalStaffDto;
+            }
+        }
+    }
+    [Serializable]
     public class AddMedicineRequest : Request
     {
         private MedicineDto medicineDto;
@@ -42,13 +61,69 @@ namespace networking.ObjectProtocol
         }
     }
     [Serializable]
+    public class AddOrderRequest : Request
+    {
+        private OrderDto orderDto;
+
+        public AddOrderRequest(OrderDto orderDto)
+        {
+            this.orderDto = orderDto;
+        }
+
+        public virtual OrderDto OrderDto
+        {
+            get
+            {
+                return orderDto;
+            }
+        }
+    }
+    [Serializable]
+    public class AddOrderMedicinesRequest : Request
+    {
+        private IList<OrderMedicineDto> orderMedicinesDto;
+
+        public AddOrderMedicinesRequest(IList<OrderMedicineDto> orderMedicinesDto)
+        {
+            this.orderMedicinesDto = orderMedicinesDto;
+        }
+
+        public virtual IList<OrderMedicineDto> OrderMedicinesDto
+        {
+            get
+            {
+                return orderMedicinesDto;
+            }
+        }
+    }
+    [Serializable]
+    public class GetOrderMedicinesRequest : Request
+    {
+        private int orderId;
+
+        public GetOrderMedicinesRequest(int orderId)
+        {
+            this.orderId = orderId;
+        }
+
+        public virtual int OrderId
+        {
+            get
+            {
+                return orderId;
+            }
+        }
+    }
+    [Serializable]
     public class UpdateMedicineRequest : Request
     {
         private MedicineDto medicineDto;
+        private bool substract;
 
-        public UpdateMedicineRequest(MedicineDto medicineDto)
+        public UpdateMedicineRequest(MedicineDto medicineDto, bool substract)
         {
             this.medicineDto = medicineDto;
+            this.substract = substract;
         }
 
         public virtual MedicineDto MedicineDto
@@ -56,6 +131,40 @@ namespace networking.ObjectProtocol
             get
             {
                 return medicineDto;
+            }
+        }
+        public virtual bool Substract
+        {
+            get
+            {
+                return substract;
+            }
+        }
+    }
+    [Serializable]
+    public class UpdateOrderRequest : Request
+    {
+        private int orderId;
+        private OrderStatus orderStatus;
+
+        public UpdateOrderRequest(int orderId, OrderStatus orderStatus)
+        {
+            this.orderId = orderId;
+            this.orderStatus = orderStatus;
+        }
+
+        public virtual int OrderId
+        {
+            get
+            {
+                return orderId;
+            }
+        }
+        public virtual OrderStatus OrderStatus
+        {
+            get
+            {
+                return orderStatus;
             }
         }
     }
@@ -74,6 +183,24 @@ namespace networking.ObjectProtocol
             get
             {
                 return idToDelete;
+            }
+        }
+    }
+    [Serializable]
+    public class GetOrdersByMedicalStaffIdRequest : Request
+    {
+        private int medicalStaffId;
+
+        public GetOrdersByMedicalStaffIdRequest(int medicalStaffId)
+        {
+            this.medicalStaffId = medicalStaffId;
+        }
+
+        public virtual int MedicalStaffId
+        {
+            get
+            {
+                return medicalStaffId;
             }
         }
     }
@@ -104,6 +231,15 @@ namespace networking.ObjectProtocol
         }
     }
     [Serializable]
+    public class GetIncompleteOrdersRequest : Request
+    {
+        public GetIncompleteOrdersRequest()
+        {
+            
+        }
+    }
+    
+    [Serializable]
     public class FindPharmacistByCredentialsRequest : Request
     {
         private string pharmacistName;
@@ -131,6 +267,33 @@ namespace networking.ObjectProtocol
         }
     }
     [Serializable]
+    public class FindMedicalStaffByCredentialsRequest : Request
+    {
+        private string medicalStaffName;
+        private string medicalStaffPassword;
+
+        public FindMedicalStaffByCredentialsRequest(string medicalStaffName, string medicalStaffPassword)
+        {
+            this.medicalStaffName = medicalStaffName;
+            this.medicalStaffPassword = medicalStaffPassword;
+        }
+
+        public virtual string MedicalStaffName
+        {
+            get
+            {
+                return medicalStaffName;
+            }
+        }
+        public virtual string MedicalStaffPassword
+        {
+            get
+            {
+                return medicalStaffPassword;
+            }
+        }
+    }
+    [Serializable]
     public class LogoutRequest : Request
     {
         private PharmacistDto pharmacistDto;
@@ -145,6 +308,42 @@ namespace networking.ObjectProtocol
             get
             {
                 return pharmacistDto;
+            }
+        }
+    }
+    [Serializable]
+    public class LogoutMedicalStaffRequest : Request
+    {
+        private MedicalStaffDto medicalStaffDto;
+
+        public LogoutMedicalStaffRequest(MedicalStaffDto medicalStaffDto)
+        {
+            this.medicalStaffDto = medicalStaffDto;
+        }
+
+        public virtual MedicalStaffDto MedicalStaffDto
+        {
+            get
+            {
+                return medicalStaffDto;
+            }
+        }
+    }
+    [Serializable]
+    public class FindMedicineRequest : Request
+    {
+        private int id;
+
+        public FindMedicineRequest(int Id)
+        {
+            this.id = Id;
+        }
+
+        public virtual int Id
+        {
+            get
+            {
+                return id;
             }
         }
     }
